@@ -62,6 +62,9 @@ def get_products(category):
     )
     return cursor.fetchall()
 
+def delete_product(name):
+    cursor.execute("DELETE FROM products WHERE name=?", (name,))
+    conn.commit()
 
 def update_card(card):
     cursor.execute("DELETE FROM settings")
