@@ -1,3 +1,5 @@
+
+
 import sqlite3
 
 conn = sqlite3.connect("database.db")
@@ -65,3 +67,21 @@ def get_products():
 def get_orders():
     cursor.execute("SELECT * FROM orders")
     return cursor.fetchall()
+
+import sqlite3
+
+conn = sqlite3.connect("database.db")
+cursor = conn.cursor()
+
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS settings (
+    card TEXT
+)
+""")
+
+conn.commit()
+
+cursor.execute("SELECT * FROM settings")
+if not cursor.fetchone():
+    cursor.execute("INSERT INTO settings VALUES ('0000 0000 0000 0000')")
+    conn.commit()
