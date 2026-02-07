@@ -33,6 +33,14 @@ CREATE TABLE IF NOT EXISTS orders (
 
 conn.commit()
 
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS products (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT,
+    price INTEGER
+)
+""")
+
 # -------- PRODUCTS --------
 
 def add_product(name, price, category):
@@ -88,3 +96,4 @@ def update_order_status(order_id, status):
         (status, order_id)
     )
     conn.commit()
+
