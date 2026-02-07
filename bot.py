@@ -4,7 +4,7 @@ from handlers.admin import admin_panel
 from handlers.client import *
 from states import *
 import db
-from client import open_menu, show_products
+from handlers.client import open_menu, show_products
 from keyboards import main_menu
 
 
