@@ -7,6 +7,17 @@ cursor = conn.cursor()
 def create_tables():
     # Products
     cursor.execute("""
+    CREATE TABLE IF NOT EXISTS orders (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER,
+    items TEXT,
+    total_price INTEGER,
+    status TEXT
+    )
+    """)
+    conn.commit()
+    
+    cursor.execute("""
     CREATE TABLE IF NOT EXISTS products(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT,
@@ -79,3 +90,12 @@ def get_card():
 
 
 create_tables()
+
+def get_orders():
+    cursor.execute("""
+        SELECT id, user_id, items, total_price, status
+        FROM orders
+        ORDER BY id DESC
+    """)
+    return cursor.fetchall()
+    
