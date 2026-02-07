@@ -1,87 +1,78 @@
-
-
 import sqlite3
 
-conn = sqlite3.connect("database.db")
+conn = sqlite3.connect("database.db", check_same_thread=False)
 cursor = conn.cursor()
 
-cursor.execute("""
-CREATE TABLE IF NOT EXISTS products (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT,
-    price INTEGER,
-    category TEXT
-)
-""")
 
-cursor.execute("""
-CREATE TABLE IF NOT EXISTS orders (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id INTEGER,
-    status TEXT,
-    total INTEGER
-)
-""")
+def create_tables():
+    # Products
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS products(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT,
+        price INTEGER,
+        category TEXT
+    )
+    """)
 
-cursor.execute("""
-CREATE TABLE IF NOT EXISTS cart (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id INTEGER,
-    product_id INTEGER,
-    quantity INTEGER
-)
-""")
+    # Orders
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS orders(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER,
+        type TEXT,
+        status TEXT
+    )
+    """)
 
-conn.commit()
+    # Order items
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS order_items(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        order_id INTEGER,
+        product_name TEXT,
+        quantity INTEGER,
+        price INTEGER
+    )
+    """)
 
-import sqlite3
+    # Settings (karta raqam uchun)
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS settings(
+        id INTEGER PRIMARY KEY,
+        card TEXT
+    )
+    """)
+
+    conn.commit()
+
 
 def add_product(name, price, category):
-    conn = sqlite3.connect("database.db")
-    cursor = conn.cursor()
-
-    cursor.execute("""
-        INSERT INTO products (name, price, category)
-        VALUES (?, ?, ?)
-    """, (name, price, category))
-
+    cursor.execute(
+        "INSERT INTO products(name, price, category) VALUES(?,?,?)",
+        (name, price, category)
+    )
     conn.commit()
-    conn.close()
 
-def delete_product(name):
-    cursor.execute("DELETE FROM products WHERE name=?", (name,))
-    conn.commit()
+
+def get_products(category):
+    cursor.execute(
+        "SELECT name, price FROM products WHERE category=?",
+        (category,)
+    )
+    return cursor.fetchall()
 
 
 def update_card(card):
     cursor.execute("DELETE FROM settings")
-    cursor.execute("INSERT INTO settings VALUES (?)", (card,))
+    cursor.execute("INSERT INTO settings(id, card) VALUES(1,?)", (card,))
     conn.commit()
 
 
-def get_products():
-    cursor.execute("SELECT * FROM products")
-    return cursor.fetchall()
+def get_card():
+    cursor.execute("SELECT card FROM settings WHERE id=1")
+    result = cursor.fetchone()
+    return result[0] if result else None
 
 
-def get_orders():
-    cursor.execute("SELECT * FROM orders")
-    return cursor.fetchall()
-
-import sqlite3
-
-conn = sqlite3.connect("database.db")
-cursor = conn.cursor()
-
-cursor.execute("""
-CREATE TABLE IF NOT EXISTS settings (
-    card TEXT
-)
-""")
-
-conn.commit()
-
-cursor.execute("SELECT * FROM settings")
-if not cursor.fetchone():
-    cursor.execute("INSERT INTO settings VALUES ('0000 0000 0000 0000')")
-    conn.commit()
+create_tables()
