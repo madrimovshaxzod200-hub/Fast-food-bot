@@ -6,7 +6,7 @@ from states import *
 import db
 from handlers.client import open_menu, show_products
 from keyboards import main_menu
-from handlers.admin import start, add_product_start, get_geme
+from handlers.admin import start, add_product_start, get_name
 
 
 app = Application.builder().token(TOKEN).build()
