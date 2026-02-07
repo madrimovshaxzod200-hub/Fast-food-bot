@@ -45,3 +45,23 @@ def add_product(name, price, category):
 
     conn.commit()
     conn.close()
+
+def delete_product(name):
+    cursor.execute("DELETE FROM products WHERE name=?", (name,))
+    conn.commit()
+
+
+def update_card(card):
+    cursor.execute("DELETE FROM settings")
+    cursor.execute("INSERT INTO settings VALUES (?)", (card,))
+    conn.commit()
+
+
+def get_products():
+    cursor.execute("SELECT * FROM products")
+    return cursor.fetchall()
+
+
+def get_orders():
+    cursor.execute("SELECT * FROM orders")
+    return cursor.fetchall()
