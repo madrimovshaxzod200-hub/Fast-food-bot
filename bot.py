@@ -12,6 +12,13 @@ from handlers.client import *
 from keyboards import main_menu
 from states import *
 import db
+from handlers.admin import (
+    admin_panel,
+    add_product_start,
+    get_name,
+    get_price,
+    get_category
+)
 
 app = Application.builder().token(TOKEN).build()
 
@@ -29,6 +36,15 @@ conv = ConversationHandler(
     fallbacks=[]
 )
 
+conv = ConversationHandler(
+    entry_points=[MessageHandler(filters.Text("➕ Mahsulot qo'shish"), add_product_start)],
+    states={
+        NAME: [MessageHandler(filters.TEXT, get_name)],
+        PRICE: [MessageHandler(filters.TEXT, get_price)],
+        CATEGORY: [MessageHandler(filters.TEXT, get_category)],
+    },
+    fallbacks=[]
+)
 
 # ===== START =====
 app.add_handler(CommandHandler("start", start))
