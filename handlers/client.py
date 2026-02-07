@@ -1,35 +1,26 @@
-from telegram import Update, ReplyKeyboardMarkup
+from telegram import Update
 from telegram.ext import ContextTypes
-from db import get_categories, get_products
+from keyboards import menu_keyboard
+from products import get_products
+from db import cursor, conn
 
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def open_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text("Kategoriya tanlang", reply_markup=menu_keyboard)
 
-    keyboard = [["📋 Menyu"]]
+async def show_products(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    text = update.message.text
 
-    await update.message.reply_text(
-        "Xush kelibsiz 🍔",
-        reply_markup=ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
-    )
+    if text == "🍔 Yegulik":
+        products = get_products("food")
 
-async def menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    elif text == "🥤 Ichimlik":
+        products = get_products("drink")
 
-    categories = get_categories()
+    else:
+        return
 
-    keyboard = [[c[0]] for c in categories]
+    msg = ""
+    for p in products:
+        msg += f"{p[1]} - {p[2]} so'm\n"
 
-    await update.message.reply_text(
-        "Kategoriya tanlang",
-        reply_markup=ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
-    )
-
-async def category_products(update: Update, context: ContextTypes.DEFAULT_TYPE):
-
-    category = update.message.text
-    products = get_products(category)
-
-    text = f"{category}\n\n"
-
-    for name, price in products:
-        text += f"{name} - {price} so‘m\n"
-
-    await update.message.reply_text(text)
+    await update.message.reply_text(msg)
