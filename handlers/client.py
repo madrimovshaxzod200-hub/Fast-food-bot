@@ -21,6 +21,12 @@ async def menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
         reply_markup=menu_keyboard
     )
 
+def add_product(name, price):
+    cursor.execute(
+        "INSERT INTO products (name, price) VALUES (?, ?)",
+        (name, price)
+    )
+    conn.commit()
 
 # ===== ZAL / DELIVERY =====
 async def open_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
