@@ -44,3 +44,9 @@ async def get_category(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     await update.message.reply_text("✅ Mahsulot qo‘shildi")
     return ConversationHandler.END
+
+from telegram import Update
+from telegram.ext import ContextTypes
+
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text("Admin panelga xush kelibsiz")
