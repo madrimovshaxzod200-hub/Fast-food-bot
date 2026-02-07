@@ -1,6 +1,5 @@
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ConversationHandler
 from config import TOKEN
-from db import init_db
 from handlers.admin import *
 from handlers.client import *
 from states import *
@@ -9,7 +8,6 @@ from client import open_menu, show_products
 from keyboards import main_menu
 
 
-init_db()
 
 app = Application.builder().token(TOKEN).build()
 
