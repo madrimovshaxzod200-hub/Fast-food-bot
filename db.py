@@ -31,17 +31,11 @@ CREATE TABLE IF NOT EXISTS orders (
 )
 """)
 
-conn.commit()
-
-cursor.execute("""
-CREATE TABLE IF NOT EXISTS products (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT,
-    price INTEGER
-)
-""")
 
 # -------- PRODUCTS --------
+def get_products():
+    cursor.execute("SELECT name FROM products")
+    return cursor.fetchall()
 
 def add_product(name, price, category):
     cursor.execute(
