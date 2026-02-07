@@ -84,3 +84,17 @@ async def get_category(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("✅ Mahsulot qo‘shildi")
 
     return -1
+
+from db import add_order, get_card
+from telegram import ReplyKeyboardMarkup
+
+# Savat
+async def add_to_cart(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    text = update.message.text
+
+    if "cart" not in context.user_data:
+        context.user_data["cart"] = []
+
+    context.user_data["cart"].append(text)
+
+    await update.message.reply_text(f"{text} savatga qo'shildi ✅")
