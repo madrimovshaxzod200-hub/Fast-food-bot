@@ -20,11 +20,17 @@ from handlers.admin import (
     get_category
 )
 
+from handlers.client import add_to_cart, show_cart, checkout, receive_check
+
 app = Application.builder().token(TOKEN).build()
 
 
 # ===== Conversation (Mahsulot qo‘shish) =====
 from handlers.admin import *
+
+app.add_handler(MessageHandler(filters.Regex("🛒 Savat"), show_cart))
+app.add_handler(MessageHandler(filters.Regex("✅ Buyurtma berish"), checkout))
+app.add_handler(MessageHandler(filters.PHOTO, receive_check))
 
 conv_add = ConversationHandler(
     entry_points=[MessageHandler(filters.Text("➕ Mahsulot qo'shish"), add_product_start)],
