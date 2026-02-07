@@ -4,6 +4,10 @@ from db import init_db
 from handlers.admin import *
 from handlers.client import *
 from states import *
+import db
+from client import open_menu, show_products
+from keyboards import main_menu
+
 
 init_db()
 
@@ -26,5 +30,8 @@ app.add_handler(CommandHandler("admin", admin_panel))
 app.add_handler(conv)
 app.add_handler(MessageHandler(filters.Text("📋 Menyu"), menu))
 app.add_handler(MessageHandler(filters.TEXT, category_products))
+
+app.add_handler(MessageHandler(filters.Text(["🏠 Zal","🛵 Delivery"]), open_menu))
+app.add_handler(MessageHandler(filters.Text(["🍔 Yegulik","🥤 Ichimlik"]), show_products))
 
 app.run_polling()
