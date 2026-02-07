@@ -31,3 +31,17 @@ CREATE TABLE IF NOT EXISTS cart (
 """)
 
 conn.commit()
+
+import sqlite3
+
+def add_product(name, price, category):
+    conn = sqlite3.connect("database.db")
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        INSERT INTO products (name, price, category)
+        VALUES (?, ?, ?)
+    """, (name, price, category))
+
+    conn.commit()
+    conn.close()
