@@ -98,3 +98,68 @@ async def add_to_cart(update: Update, context: ContextTypes.DEFAULT_TYPE):
     context.user_data["cart"].append(text)
 
     await update.message.reply_text(f"{text} savatga qo'shildi ✅")
+
+async def show_cart(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    cart = context.user_data.get("cart", [])
+
+    if not cart:
+        await update.message.reply_text("Savat bo'sh ❌")
+        return
+
+    text = "🛒 Savat:\n\n"
+    for item in cart:
+        text += f"• {item}\n"
+
+    keyboard = [["✅ Buyurtma berish"]]
+
+    await update.message.reply_text(
+        text,
+        reply_markup=ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
+)
+
+async def checkout(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    cart = context.user_data.get("cart", [])
+
+    if not cart:
+        await update.message.reply_text("Savat bo'sh")
+        return
+
+    user_id = update.effective_user.id
+    items = ", ".join(cart)
+
+    # Narxni keyin hisoblaymiz
+    total_price = 0
+
+    add_order(user_id, items, total_price)
+
+    card = get_card()
+
+    await update.message.reply_text(
+        f"💳 To'lov uchun karta:\n\n{card}\n\n"
+        "📸 Chek rasmini yuboring"
+    )
+
+    context.user_data["waiting_check"] = True
+
+from config import ADMIN_IDS
+
+async def receive_check(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if not context.user_data.get("waiting_check"):
+        return
+
+    photo = update.message.photo[-1].file_id
+    user = update.effective_user
+
+    for admin in ADMIN_IDS:
+        await context.bot.send_photo(
+            admin,
+            photo=photo,
+            caption=f"🧾 Yangi buyurtma\n\nUser: {user.id}"
+        )
+
+    await update.message.reply_text("Buyurtma yuborildi ✅")
+
+    context.user_data["cart"] = []
+    context.user_data["waiting_check"] = False
+
+
