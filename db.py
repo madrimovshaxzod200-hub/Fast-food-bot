@@ -33,9 +33,7 @@ CREATE TABLE IF NOT EXISTS orders (
 
 
 # -------- PRODUCTS --------
-def get_products():
-    cursor.execute("SELECT name FROM products")
-    return cursor.fetchall()
+G
 
 def add_product(name, price, category):
     cursor.execute(
