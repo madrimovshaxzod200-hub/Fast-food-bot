@@ -1,7 +1,7 @@
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ConversationHandler
 from config import TOKEN
-from handlers.admin import start
-from handlers.client import admin_panel
+from handlers.admin import admin_panel 
+from handlers.client import *
 from states import *
 import db
 from client import open_menu, show_products
