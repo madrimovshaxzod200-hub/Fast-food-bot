@@ -21,12 +21,27 @@ async def menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
         reply_markup=menu_keyboard
     )
 
-def add_product(name, price):
-    cursor.execute(
-        "INSERT INTO products (name, price) VALUES (?, ?)",
-        (name, price)
+from db import get_products
+from telegram import ReplyKeyboardMarkup
+from telegram import Update
+from telegram.ext import ContextTypes
+
+
+async def menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
+
+    products = get_products()
+
+    if not products:
+        await update.message.reply_text("Mahsulotlar yo‘q")
+        return
+
+    keyboard = [[p[0]] for p in products]
+    keyboard.append(["🛒 Savat"])
+
+    await update.message.reply_text(
+        "🍔 Buyurtma menyusi:",
+        reply_markup=ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
     )
-    conn.commit()
 
 # ===== ZAL / DELIVERY =====
 async def open_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
