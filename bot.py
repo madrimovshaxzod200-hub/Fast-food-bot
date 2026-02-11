@@ -8,6 +8,7 @@ from telegram.ext import (
 
 from config import TOKEN
 from handlers.admin import admin_panel, add_product_start, get_name, get_price
+from client import category_products
 from handlers.client import *
 from keyboards import main_menu
 from states import *
