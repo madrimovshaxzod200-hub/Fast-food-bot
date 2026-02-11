@@ -178,4 +178,7 @@ async def receive_check(update: Update, context: ContextTypes.DEFAULT_TYPE):
     context.user_data["cart"] = []
     context.user_data["waiting_check"] = False
 
+async def category_products(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    return
+
 
