@@ -2,8 +2,8 @@ from telegram import Update, ReplyKeyboardMarkup
 from telegram.ext import ContextTypes
 
 from keyboards import menu_keyboard
-from products import get_products
-from db import cursor, conn
+from db import cursor, conn, get_products, add_order, get_card
+from config import ADMIN_IDS
 
 
 # ===== START =====
@@ -21,10 +21,9 @@ async def menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
         reply_markup=menu_keyboard
     )
 
-from db import get_products
-from telegram import ReplyKeyboardMarkup
-from telegram import Update
-from telegram.ext import ContextTypes
+
+# ===== Barcha mahsulotlarni ko‘rsatish =====
+async def show_all_products(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     products = get_products()
 
@@ -32,7 +31,7 @@ from telegram.ext import ContextTypes
         await update.message.reply_text("Mahsulotlar yo‘q")
         return
 
-    keyboard = [[p[0]] for p in products]
+    keyboard = [[p[1]] for p in products]
     keyboard.append(["🛒 Savat"])
 
     await update.message.reply_text(
@@ -40,7 +39,8 @@ from telegram.ext import ContextTypes
         reply_markup=ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
     )
 
-# ===== ZAL / DELIVERY =====
+
+# ===== Kategoriya menyu =====
 async def open_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
     keyboard = [["🍔 Yegulik", "🥤 Ichimlik"]]
 
@@ -67,19 +67,16 @@ async def show_products(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text("Mahsulot yo‘q")
         return
 
-    msg = ""
-    for p in products:
-        msg += f"{p[1]} - {p[2]} so'm\n"
+    keyboard = [[p[1]] for p in products]
+    keyboard.append(["🛒 Savat"])
 
-    await update.message.reply_text(msg)
-
-
-# ===== category_products (bot.py talab qiladi) =====
-async def category_products(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    pass
+    await update.message.reply_text(
+        "Mahsulot tanlang 👇",
+        reply_markup=ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
+    )
 
 
-# ===== ADMIN uchun category olish =====
+# ===== ADMIN mahsulot qo‘shish =====
 async def get_category(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = update.message.text
 
@@ -103,10 +100,8 @@ async def get_category(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     return -1
 
-from db import add_order, get_card
-from telegram import ReplyKeyboardMarkup
 
-# Savat
+# ===== Savatga qo‘shish =====
 async def add_to_cart(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = update.message.text
 
@@ -117,6 +112,8 @@ async def add_to_cart(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     await update.message.reply_text(f"{text} savatga qo'shildi ✅")
 
+
+# ===== Savatni ko‘rish =====
 async def show_cart(update: Update, context: ContextTypes.DEFAULT_TYPE):
     cart = context.user_data.get("cart", [])
 
@@ -133,8 +130,10 @@ async def show_cart(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
         text,
         reply_markup=ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
-)
+    )
 
+
+# ===== Buyurtma berish =====
 async def checkout(update: Update, context: ContextTypes.DEFAULT_TYPE):
     cart = context.user_data.get("cart", [])
 
@@ -145,7 +144,6 @@ async def checkout(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
     items = ", ".join(cart)
 
-    # Narxni keyin hisoblaymiz
     total_price = 0
 
     add_order(user_id, items, total_price)
@@ -159,8 +157,8 @@ async def checkout(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     context.user_data["waiting_check"] = True
 
-from config import ADMIN_IDS
 
+# ===== Chek qabul qilish =====
 async def receive_check(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not context.user_data.get("waiting_check"):
         return
