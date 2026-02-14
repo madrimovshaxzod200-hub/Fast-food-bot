@@ -595,6 +595,19 @@ async def save_order(message: types.Message, state: FSMContext):
 
 ADMIN_ID = 6780565815  # 🔥 BU YERGA O'Z TELEGRAM IDINGNI YOZ
 
+from aiogram.filters import Command
+from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
+
+@dp.message(Command("admin"))
+async def admin_panel(message: types.Message):
+    if message.from_user.id != ADMIN_ID:
+        await message.answer("Siz admin emassiz ❌")
+        return
+
+    await message.answer(
+        "🔐 Admin panelga xush kelibsiz",
+        reply_markup=admin_menu
+)
 
 admin_menu = ReplyKeyboardMarkup(
     keyboard=[
