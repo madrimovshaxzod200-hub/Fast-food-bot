@@ -9,7 +9,6 @@ import sqlite3
 import datetime
 import os
 TOKEN = "7782621732:AAHG7MRqJBDqZf3TwGD_FfccMus340YhjyY"
-print("TOKEN:", TOKEN)
 
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
