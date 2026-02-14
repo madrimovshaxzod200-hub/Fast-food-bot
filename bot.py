@@ -1,4 +1,4 @@
-from aiogram import Bot, Dispatcher, types,
+from aiogram import Bot, Dispatcher, types,F
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 from aiogram.filters import CommandStart
 from aiogram.fsm.state import State, StatesGroup
