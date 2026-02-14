@@ -1327,6 +1327,26 @@ async def notify_admin(order_id, order_type, location, payment, total):
 
 # ================= BOT ISHGA TUSHIRISH =================
 
+async def create_tables():
+    conn = sqlite3.connect("fastfood.db")
+    cursor = conn.cursor()
+
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS orders (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER,
+        full_name TEXT,
+        phone TEXT,
+        table_number INTEGER,
+        products TEXT,
+        total_price INTEGER,
+        created_at TEXT
+    )
+    """)
+
+    conn.commit()
+    conn.close()
+
 async def main():
     await create_tables()
     await dp.start_polling(bot)
