@@ -68,7 +68,8 @@ from aiogram.fsm.context import FSMContext
 import sqlite3
 import datetime
 
-TOKEN = "7782621732:AAHG7MRqJBDqZf3TwGD_FfccMus340YhjyY"
+import os
+TOKEN = os.getenv("BOT_TOKEN")
 
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
