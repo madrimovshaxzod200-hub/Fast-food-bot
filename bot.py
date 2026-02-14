@@ -8,7 +8,7 @@ import asyncio
 import sqlite3
 import datetime
 import os
-TOKEN = "7782621732:AAHG7MRqJBDqZf3TwGD_FfccMus340YhjyY"
+TOKEN = "7782621732:AAGxkKO8fYw8sGqYcENJIpZ5punZwhA1scU"
 
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
