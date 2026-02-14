@@ -1,3 +1,41 @@
+from aiogram import Bot, Dispatcher, types, F
+from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
+from aiogram.filters import CommandStart
+from aiogram.fsm.state import State, StatesGroup
+from aiogram.fsm.context import FSMContext
+import sqlite3
+import datetime
+
+import os
+TOKEN = os.getenv("BOT_TOKEN")
+
+bot = Bot(token=TOKEN)
+dp = Dispatcher()
+
+
+
+# ================= START MENYU =================
+
+start_menu = ReplyKeyboardMarkup(
+    keyboard=[
+        [KeyboardButton(text="🏠 Zal"), KeyboardButton(text="🛵 Delivery")],
+        [KeyboardButton(text="📦 Buyurtmalarim")]
+    ],
+    resize_keyboard=True
+)
+
+
+# ================= CATEGORY MENYU =================
+
+category_menu = ReplyKeyboardMarkup(
+    keyboard=[
+        [KeyboardButton(text="🍔 Yegulik"), KeyboardButton(text="🥤 Ichimlik")],
+        [KeyboardButton(text="🛒 Savat")],
+        [KeyboardButton(text="⬅ Orqaga")]
+    ],
+    resize_keyboard=True
+)
+
 import sqlite3
 
 conn = sqlite3.connect("fastfood.db")
@@ -59,44 +97,6 @@ CREATE TABLE IF NOT EXISTS order_items (
 
 conn.commit()
 conn.close()
-
-from aiogram import Bot, Dispatcher, types, F
-from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
-from aiogram.filters import CommandStart
-from aiogram.fsm.state import State, StatesGroup
-from aiogram.fsm.context import FSMContext
-import sqlite3
-import datetime
-
-import os
-TOKEN = os.getenv("BOT_TOKEN")
-
-bot = Bot(token=TOKEN)
-dp = Dispatcher()
-
-
-# ================= START MENYU =================
-
-start_menu = ReplyKeyboardMarkup(
-    keyboard=[
-        [KeyboardButton(text="🏠 Zal"), KeyboardButton(text="🛵 Delivery")],
-        [KeyboardButton(text="📦 Buyurtmalarim")]
-    ],
-    resize_keyboard=True
-)
-
-
-# ================= CATEGORY MENYU =================
-
-category_menu = ReplyKeyboardMarkup(
-    keyboard=[
-        [KeyboardButton(text="🍔 Yegulik"), KeyboardButton(text="🥤 Ichimlik")],
-        [KeyboardButton(text="🛒 Savat")],
-        [KeyboardButton(text="⬅ Orqaga")]
-    ],
-    resize_keyboard=True
-)
-
 
 # ================= FSM =================
 
